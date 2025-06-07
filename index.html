@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Диспетчер грузоперевозок - Демо</title>
+  <style>
+    /* Все стили из основного приложения */
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      font-size: 18px;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    .date-selector {
+      margin-top: 10px;
+    }
+    
+    .date-selector select {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.9);
+      color: #333;
+    }
+    
+    /* Главные кнопки действий */
+    .main-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 15px;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .big-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px 10px;
+      border: none;
+      border-radius: 12px;
+      background: #f8f9fa;
+      color: #333;
+      font-size: 14px;
+      min-height: 80px;
+      transition: all 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      cursor: pointer;
+    }
+    
+    .big-button:active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .big-button .icon {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+    
+    .big-button.primary {
+      background: #667eea;
+      color: white;
+    }
+    
+    .big-button.success {
+      background: #48bb78;
+      color: white;
+    }
+    
+    .big-button.danger {
+      background: #f56565;
+      color: white;
+    }
+    
+    /* Таблица заданий */
+    .tasks-container {
+      padding: 15px;
+    }
+    
+    .task-card {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: relative;
+      transition: all 0.2s;
+    }
+    
+    .task-card.selected {
+      background: #e6f4ff;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+    }
+    
+    .task-card .machine-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .task-card .machine-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #667eea;
+    }
+    
+    .task-card .select-checkbox {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+    
+    .task-detail {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: start;
+    }
+    
+    .task-detail .label {
+      font-size: 16px;
+      color: #666;
+      min-width: 80px;
+    }
+    
+    .task-detail .value {
+      font-size: 16px;
+      color: #333;
+      padding: 8px 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .task-detail .value:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+    }
+    
+    /* Стили для подзаказов */
+    .task-card .sub-orders {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .sub-order {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    
+    .sub-order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .remove-sub-order {
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: #ff6b6b;
+      color: white;
+      border-radius: 50%;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    
+    .add-sub-order-btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 2px dashed #667eea;
+      background: transparent;
+      color: #667eea;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .add-sub-order-btn:active {
+      background: #667eea;
+      color: white;
+    }
+    
+    /* Демо уведомление */
+    .demo-notice {
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px;
+      margin: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .demo-notice h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+    
+    .demo-notice p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    
+    .demo-notice a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    /* Дополнительные действия */
+    .more-actions {
+      padding: 0 15px 15px 15px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    
+    .secondary-button {
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      background: white;
+      font-size: 16px;
+      color: #666;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .secondary-button:active {
+      background: #f8f9fa;
+    }
+    
+    /* Статус сообщения */
+    .status {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 25px;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      font-size: 16px;
+      z-index: 1001;
+      animation: fadeInOut 3s ease-in-out;
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+    
+    .status.success {
+      background: #48bb78;
+      color: white;
+    }
+    
+    .status.error {
+      background: #f56565;
+      color: white;
+    }
+    
+    /* Быстрое меню выбора */
+    .quick-menu {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+      padding: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+      z-index: 1000;
+      animation: slideUp 0.3s ease-out;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+    
+    .quick-menu h3 {
+      margin: 0 0 15px 0;
+      color: #333;
+      text-align: center;
+    }
+    
+    .quick-menu-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: #f0f0f0;
+      border-radius: 50%;
+      font-size: 20px;
+      color: #666;
+      cursor: pointer;
+    }
+    
+    .quick-option {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      background: white;
+      text-align: left;
+      font-size: 16px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .quick-option:active {
+      background: #667eea;
+      color: white;
+      transform: scale(0.98);
+    }
+    
+    /* Placeholder для пустых полей */
+    [contenteditable]:empty:before {
+      content: attr(placeholder);
+      color: #999;
+      font-style: italic;
+    }
+    
+    .task-card .machine-name:empty:before {
+      content: "Нажмите для ввода машин(ы)";
+    }
+    
+    /* Адаптация для планшетов */
+    @media (min-width: 768px) {
+      .main-actions {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .more-actions {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .tasks-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .demo-notice {
+        max-width: 800px;
+        margin: 15px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📋 Диспетчер грузоперевозок</h1>
+    <div class="date-selector">
+      <select id="sheetSelector">
+        <option value="09.06.2025">09.06.2025</option>
+        <option value="10.06.2025">10.06.2025</option>
+        <option value="11.06.2025">11.06.2025</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="demo-notice">
+    <h3>⚠️ Это демо-версия</h3>
+    <p>Данные сохраняются только в браузере</p>
+    <p>Для полной версии с Google Sheets и Telegram:</p>
+    <p><a href="https://github.com/YOUR_USERNAME/YOUR_REPO#установка" target="_blank">Смотрите инструкцию по установке →</a></p>
+  </div>
+  
+  <div class="main-actions">
+    <button onclick="addNewTask()" class="big-button" style="background: #f39c12;">
+      <span class="icon">➕</span>
+      <span class="text">Новый заказ</span>
+    </button>
+    <button onclick="saveData()" class="big-button success">
+      <span class="icon">💾</span>
+      <span class="text">Сохранить</span>
+    </button>
+    <button onclick="sendToTelegram()" class="big-button primary">
+      <span class="icon">📤</span>
+      <span class="text">Telegram</span>
+    </button>
+    <button onclick="copyToClipboard()" class="big-button">
+      <span class="icon">📋</span>
+      <span class="text">Копировать</span>
+    </button>
+  </div>
+  
+  <div class="tasks-container" id="tasksContainer">
+    <!-- Здесь будут карточки заданий -->
+  </div>
+  
+  <div class="more-actions">
+    <button onclick="duplicateSelected()" class="secondary-button">📑 Дублировать</button>
+    <button onclick="deleteSelected()" class="secondary-button">🗑️ Удалить выбранные</button>
+    <button onclick="showTemplates()" class="secondary-button">📝 Шаблоны</button>
+    <button onclick="clearAll()" class="secondary-button">🗑️ Очистить все</button>
+  </div>
+  
+  <div id="status" class="status" style="display:none;"></div>
+
+  <script>
+    // Демо-версия для GitHub Pages
+    let currentSheet = '09.06.2025';
+    let selectedTasks = new Set();
+    let tasksData = [];
+    
+    // Шаблоны
+    const templates = {
+      machines: ['107', '486', '513', '444', '284', '295', '689', '986', '795', 'лагуна'],
+      cargo: ['песок', 'щебень 31/63 м800', 'пгс', 'асфальт', 'почасовая'],
+      customers: [
+        'ООО Союзпромсирой',
+        'ООО Римар',
+        'ООО ИЖГОРОДСТРОЙ',
+        'ООО Инком',
+        'ООО Дорстрой 44',
+        'ООО ДМС'
+      ]
+    };
+    
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFromLocalStorage();
+      renderTasks();
+      
+      // Обработчик изменения даты
+      document.getElementById('sheetSelector').addEventListener('change', (e) => {
+        saveToLocalStorage();
+        currentSheet = e.target.value;
+        loadFromLocalStorage();
+        renderTasks();
+      });
+    });
+    
+    // Загрузка из localStorage
+    function loadFromLocalStorage() {
+      const saved = localStorage.getItem('dispatcher_' + currentSheet);
+      if (saved) {
+        tasksData = JSON.parse(saved);
+      } else {
+        // Демо данные
+        tasksData = [
+          {
+            machines: '107, 486',
+            orders: [
+              {
+                cargo: 'песок',
+                from: 'селычка',
+                to: 'завьялово',
+                customer: 'ООО Союзпромсирой',
+                note: ''
+              }
+            ]
+          }
+        ];
+      }
+    }
+    
+    // Сохранение в localStorage
+    function saveToLocalStorage() {
+      localStorage.setItem('dispatcher_' + currentSheet, JSON.stringify(tasksData));
+    }
+    
+    // Отрисовка заданий
+    function renderTasks() {
+      const container = document.getElementById('tasksContainer');
+      container.innerHTML = '';
+      selectedTasks.clear();
+      
+      tasksData.forEach((task, index) => {
+        if (!task.machines && task.orders.every(o => !o.cargo && !o.from && !o.to && !o.customer)) return;
+        
+        const taskCard = createTaskCard(task, index);
+        container.appendChild(taskCard);
+      });
+    }
+    
+    // Создание карточки задания
+    function createTaskCard(taskData, index) {
+      const card = document.createElement('div');
+      card.className = 'task-card';
+      card.dataset.index = index;
+      
+      let html = `
+        <div class="machine-header">
+          <div class="machine-name" contenteditable="true" data-field="machines">🚛 ${taskData.machines || 'Машина'}</div>
+          <input type="checkbox" class="select-checkbox" onchange="toggleSelection(${index})">
+        </div>
+        <div class="sub-orders">
+      `;
+      
+      taskData.orders.forEach((order, orderIndex) => {
+        html += `
+          <div class="sub-order" data-order-index="${orderIndex}">
+            <div class="sub-order-header">
+              <span>Заказ ${orderIndex + 1}</span>
+              ${taskData.orders.length > 1 ? `<button class="remove-sub-order" onclick="removeSubOrder(${index}, ${orderIndex})">×</button>` : ''}
+            </div>
+            <div class="task-detail">
+              <span class="label">📦 Груз:</span>
+              <div class="value" contenteditable="true" data-field="cargo" data-order="${orderIndex}" onclick="showQuickMenu(this, 'cargo')">${order.cargo || ''}</div>
+            </div>
+            <div class="task-detail">
+              <span class="label">📍 Откуда:</span>
+              <div class="value" contenteditable="true" data-field="from" data-order="${orderIndex}">${order.from || ''}</div>
+            </div>
+            <div class="task-detail">
+              <span class="label">📍 Куда:</span>
+              <div class="value" contenteditable="true" data-field="to" data-order="${orderIndex}">${order.to || ''}</div>
+            </div>
+            <div class="task-detail">
+              <span class="label">👤 Заказчик:</span>
+              <div class="value" contenteditable="true" data-field="customer" data-order="${orderIndex}" onclick="showQuickMenu(this, 'customers')">${order.customer || ''}</div>
+            </div>
+            <div class="task-detail">
+              <span class="label">📝 Заметка:</span>
+              <div class="value" contenteditable="true" data-field="note" data-order="${orderIndex}">${order.note || ''}</div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+          <button class="add-sub-order-btn" onclick="addSubOrder(${index})">+ Добавить заказ для этих машин</button>
+        </div>
+      `;
+      
+      card.innerHTML = html;
+      
+      // Обработчики изменений
+      card.querySelectorAll('[contenteditable]').forEach(elem => {
+        elem.addEventListener('input', () => updateTaskData(index, elem));
+      });
+      
+      return card;
+    }
+    
+    // Обновление данных
+    function updateTaskData(index, element) {
+      const field = element.dataset.field;
+      const orderIndex = element.dataset.order;
+      const value = element.textContent.trim();
+      
+      if (field === 'machines') {
+        tasksData[index].machines = value;
+      } else if (orderIndex !== undefined) {
+        tasksData[index].orders[orderIndex][field] = value;
+      }
+      
+      saveToLocalStorage();
+    }
+    
+    // Добавить новое задание
+    function addNewTask() {
+      const newTask = {
+        machines: '',
+        orders: [{
+          cargo: '',
+          from: '',
+          to: '',
+          customer: '',
+          note: ''
+        }]
+      };
+      tasksData.push(newTask);
+      saveToLocalStorage();
+      renderTasks();
+      
+      // Прокрутка к новой карточке
+      setTimeout(() => {
+        const cards = document.querySelectorAll('.task-card');
+        const newCard = cards[cards.length - 1];
+        newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        newCard.querySelector('[data-field="machines"]').focus();
+      }, 100);
+    }
+    
+    // Добавить подзаказ
+    function addSubOrder(taskIndex) {
+      tasksData[taskIndex].orders.push({
+        cargo: '',
+        from: '',
+        to: '',
+        customer: '',
+        note: ''
+      });
+      saveToLocalStorage();
+      renderTasks();
+    }
+    
+    // Удалить подзаказ
+    function removeSubOrder(taskIndex, orderIndex) {
+      if (tasksData[taskIndex].orders.length > 1) {
+        tasksData[taskIndex].orders.splice(orderIndex, 1);
+        saveToLocalStorage();
+        renderTasks();
+        showStatus('Заказ удален', 'success');
+      }
+    }
+    
+    // Переключение выделения
+    function toggleSelection(index) {
+      const card = document.querySelector(`.task-card[data-index="${index}"]`);
+      if (selectedTasks.has(index)) {
+        selectedTasks.delete(index);
+        card.classList.remove('selected');
+      } else {
+        selectedTasks.add(index);
+        card.classList.add('selected');
+      }
+    }
+    
+    // Сохранить данные
+    function saveData() {
+      saveToLocalStorage();
+      showStatus('Сохранено локально!', 'success');
+    }
+    
+    // Отправка в Telegram (демо)
+    function sendToTelegram() {
+      const message = formatForTelegram();
+      copyToClipboard();
+      showStatus('Скопировано! В полной версии отправляется в Telegram', 'success');
+    }
+    
+    // Копировать в буфер обмена
+    function copyToClipboard() {
+      const message = formatForTelegram();
+      
+      navigator.clipboard.writeText(message)
+        .then(() => showStatus('Скопировано в буфер обмена!', 'success'))
+        .catch(() => {
+          const textarea = document.createElement('textarea');
+          textarea.value = message;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          showStatus('Скопировано!', 'success');
+        });
+    }
+    
+    // Форматирование для Telegram
+    function formatForTelegram() {
+      let message = `📅 ${currentSheet}\n\n`;
+      
+      tasksData.forEach((task, taskIndex) => {
+        if (!task.machines) return;
+        
+        message += `🚛 ${task.machines}\n`;
+        
+        task.orders.forEach((order, orderIndex) => {
+          if (task.orders.length > 1) {
+            message += `  ${orderIndex + 1}. `;
+          } else {
+            message += `  `;
+          }
+          
+          message += `📦 ${order.cargo || '-'} | `;
+          message += `📍 ${order.from || '?'} → ${order.to || '?'} | `;
+          message += `👤 ${order.customer || '-'}`;
+          
+          if (order.note) {
+            message += `\n     📝 ${order.note}`;
+          }
+          message += '\n';
+        });
+        
+        message += '\n';
+      });
+      
+      return message.trim();
+    }
+    
+    // Дублировать выбранные
+    function duplicateSelected() {
+      if (selectedTasks.size === 0) {
+        showStatus('Выберите задания для дублирования', 'error');
+        return;
+      }
+      
+      const indices = Array.from(selectedTasks).sort((a, b) => b - a);
+      indices.forEach(index => {
+        const original = tasksData[index];
+        const duplicate = {
+          machines: '',
+          orders: original.orders.map(order => ({...order}))
+        };
+        tasksData.splice(index + 1, 0, duplicate);
+      });
+      
+      saveToLocalStorage();
+      renderTasks();
+      showStatus(`Продублировано заданий: ${indices.length}`, 'success');
+    }
+    
+    // Удалить выбранные
+    function deleteSelected() {
+      if (selectedTasks.size === 0) {
+        showStatus('Выберите задания для удаления', 'error');
+        return;
+      }
+      
+      if (!confirm(`Удалить выбранные задания (${selectedTasks.size} шт.)?`)) {
+        return;
+      }
+      
+      const indices = Array.from(selectedTasks).sort((a, b) => b - a);
+      indices.forEach(index => {
+        tasksData.splice(index, 1);
+      });
+      
+      saveToLocalStorage();
+      renderTasks();
+      showStatus('Задания удалены', 'success');
+    }
+    
+    // Показать шаблоны
+    function showTemplates() {
+      const menu = document.createElement('div');
+      menu.className = 'quick-menu';
+      
+      menu.innerHTML = `
+        <button class="quick-menu-close" onclick="this.parentElement.remove()">×</button>
+        <h3>📋 Быстрые шаблоны</h3>
+        
+        <h4 style="margin-top: 20px;">🚛 Популярные машины</h4>
+        ${templates.machines.map(m => 
+          `<button class="quick-option" onclick="quickAddMachine('${m}')">${m}</button>`
+        ).join('')}
+      `;
+      
+      document.body.appendChild(menu);
+    }
+    
+    // Выбор из быстрого меню
+    function selectQuickOption(field, taskIndex, value, orderIndex) {
+      const card = document.querySelector(`.task-card[data-index="${taskIndex}"]`);
+      const selector = orderIndex !== undefined ? 
+        `[data-field="${field}"][data-order="${orderIndex}"]` : 
+        `[data-field="${field}"]`;
+      const fieldElement = card.querySelector(selector);
+      
+      fieldElement.textContent = value;
+      
+      // Обновляем данные
+      if (field === 'machines') {
+        tasksData[taskIndex].machines = value;
+      } else {
+        const oIndex = orderIndex !== undefined ? parseInt(orderIndex) : 0;
+        tasksData[taskIndex].orders[oIndex][field] = value;
+      }
+      
+      saveToLocalStorage();
+      document.querySelector('.quick-menu').remove();
+    }
+    
+    // Очистить все
+    function clearAll() {
+      if (confirm('Удалить все задания? Это действие нельзя отменить!')) {
+        tasksData = [];
+        saveToLocalStorage();
+        renderTasks();
+        showStatus('Все задания удалены', 'success');
+      }
+    }
+    
+    // Показать статус
+    function showStatus(message, type = '') {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = 'status ' + type;
+      status.style.display = 'block';
+      
+      setTimeout(() => {
+        status.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
+    
+    // Быстрое добавление машины
+    function quickAddMachine(machine) {
+      const newTask = {
+        machines: machine,
+        orders: [{
+          cargo: '',
+          from: '',
+          to: '',
+          customer: '',
+          note: ''
+        }]
+      };
+      
+      tasksData.push(newTask);
+      saveToLocalStorage();
+      renderTasks();
+      
+      document.querySelector('.quick-menu').remove();
+      showStatus(`Добавлена машина ${machine}`, 'success');
+    }
+    
+    // Показать быстрое меню
+    function showQuickMenu(element, type) {
+      const existingMenu = document.querySelector('.quick-menu');
+      if (existingMenu) existingMenu.remove();
+      
+      const menu = document.createElement('div');
+      menu.className = 'quick-menu';
+      
+      const options = templates[type] || [];
+      const taskIndex = element.closest('.task-card').dataset.index;
+      const orderIndex = element.dataset.order;
+      const field = element.dataset.field;
+      
+      menu.innerHTML = `
+        <button class="quick-menu-close" onclick="this.parentElement.remove()">×</button>
+        <h3>Выберите ${type === 'cargo' ? 'груз' : 'заказчика'}</h3>
+        ${options.map(option => 
+          `<button class="quick-option" onclick="selectQuickOption('${field}', ${taskIndex}, '${option.replace(/'/g, "\\'")}', ${orderIndex})">${option}</button>`
+        ).join('')}
+      `;
+      
+      document.body.appendChild(menu);
+    }
