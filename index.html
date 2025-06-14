@@ -1,889 +1,777 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Диспетчер грузоперевозок - Демо</title>
-  <style>
-    /* Все стили из основного приложения */
-    * {
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-      font-size: 18px;
-      margin: 0;
-      padding: 0;
-      background-color: #f0f2f5;
-      -webkit-text-size-adjust: 100%;
-      -webkit-tap-highlight-color: transparent;
-    }
-    
-    .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 600;
-    }
-    
-    .date-selector {
-      margin-top: 10px;
-    }
-    
-    .date-selector select {
-      width: 100%;
-      padding: 12px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.9);
-      color: #333;
-    }
-    
-    /* Главные кнопки действий */
-    .main-actions {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      padding: 15px;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    
-    .big-button {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 15px 10px;
-      border: none;
-      border-radius: 12px;
-      background: #f8f9fa;
-      color: #333;
-      font-size: 14px;
-      min-height: 80px;
-      transition: all 0.2s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      cursor: pointer;
-    }
-    
-    .big-button:active {
-      transform: scale(0.98);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    .big-button .icon {
-      font-size: 28px;
-      margin-bottom: 5px;
-    }
-    
-    .big-button.primary {
-      background: #667eea;
-      color: white;
-    }
-    
-    .big-button.success {
-      background: #48bb78;
-      color: white;
-    }
-    
-    .big-button.danger {
-      background: #f56565;
-      color: white;
-    }
-    
-    /* Таблица заданий */
-    .tasks-container {
-      padding: 15px;
-    }
-    
-    .task-card {
-      background: white;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      position: relative;
-      transition: all 0.2s;
-    }
-    
-    .task-card.selected {
-      background: #e6f4ff;
-      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
-    }
-    
-    .task-card .machine-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    
-    .task-card .machine-name {
-      font-size: 20px;
-      font-weight: 600;
-      color: #667eea;
-    }
-    
-    .task-card .select-checkbox {
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-    }
-    
-    .task-detail {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 8px;
-      margin-bottom: 8px;
-      align-items: start;
-    }
-    
-    .task-detail .label {
-      font-size: 16px;
-      color: #666;
-      min-width: 80px;
-    }
-    
-    .task-detail .value {
-      font-size: 16px;
-      color: #333;
-      padding: 8px 12px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      transition: all 0.2s;
-    }
-    
-    .task-detail .value:focus {
-      outline: none;
-      border-color: #667eea;
-      background: white;
-    }
-    
-    /* Стили для подзаказов */
-    .task-card .sub-orders {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid #e0e0e0;
-    }
-    
-    .sub-order {
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 8px;
-      position: relative;
-    }
-    
-    .sub-order-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #666;
-    }
-    
-    .remove-sub-order {
-      width: 24px;
-      height: 24px;
-      border: none;
-      background: #ff6b6b;
-      color: white;
-      border-radius: 50%;
-      font-size: 16px;
-      line-height: 1;
-      cursor: pointer;
-    }
-    
-    .add-sub-order-btn {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: 2px dashed #667eea;
-      background: transparent;
-      color: #667eea;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .add-sub-order-btn:active {
-      background: #667eea;
-      color: white;
-    }
-    
-    /* Демо уведомление */
-    .demo-notice {
-      background: #fff3cd;
-      color: #856404;
-      padding: 15px;
-      margin: 15px;
-      border-radius: 8px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    
-    .demo-notice h3 {
-      margin: 0 0 10px 0;
-      font-size: 18px;
-    }
-    
-    .demo-notice p {
-      margin: 5px 0;
-      font-size: 14px;
-    }
-    
-    .demo-notice a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    
-    /* Дополнительные действия */
-    .more-actions {
-      padding: 0 15px 15px 15px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    
-    .secondary-button {
-      padding: 12px;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
-      background: white;
-      font-size: 16px;
-      color: #666;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-    
-    .secondary-button:active {
-      background: #f8f9fa;
-    }
-    
-    /* Статус сообщения */
-    .status {
-      position: fixed;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 12px 24px;
-      border-radius: 25px;
-      background: white;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      font-size: 16px;
-      z-index: 1001;
-      animation: fadeInOut 3s ease-in-out;
-    }
-    
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-      20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-      80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-    }
-    
-    .status.success {
-      background: #48bb78;
-      color: white;
-    }
-    
-    .status.error {
-      background: #f56565;
-      color: white;
-    }
-    
-    /* Быстрое меню выбора */
-    .quick-menu {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      border-radius: 20px 20px 0 0;
-      box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
-      padding: 20px;
-      max-height: 70vh;
-      overflow-y: auto;
-      z-index: 1000;
-      animation: slideUp 0.3s ease-out;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    @keyframes slideUp {
-      from {
-        transform: translateY(100%);
-      }
-      to {
-        transform: translateY(0);
-      }
-    }
-    
-    .quick-menu h3 {
-      margin: 0 0 15px 0;
-      color: #333;
-      text-align: center;
-    }
-    
-    .quick-menu-close {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 30px;
-      height: 30px;
-      border: none;
-      background: #f0f0f0;
-      border-radius: 50%;
-      font-size: 20px;
-      color: #666;
-      cursor: pointer;
-    }
-    
-    .quick-option {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      margin-bottom: 10px;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
-      background: white;
-      text-align: left;
-      font-size: 16px;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-    
-    .quick-option:active {
-      background: #667eea;
-      color: white;
-      transform: scale(0.98);
-    }
-    
-    /* Placeholder для пустых полей */
-    [contenteditable]:empty:before {
-      content: attr(placeholder);
-      color: #999;
-      font-style: italic;
-    }
-    
-    .task-card .machine-name:empty:before {
-      content: "Нажмите для ввода машин(ы)";
-    }
-    
-    /* Адаптация для планшетов */
-    @media (min-width: 768px) {
-      .main-actions {
-        grid-template-columns: repeat(4, 1fr);
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      
-      .more-actions {
-        grid-template-columns: repeat(4, 1fr);
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      
-      .tasks-container {
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      
-      .demo-notice {
-        max-width: 800px;
-        margin: 15px auto;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СтройПесок - Добыча и продажа песка с карьера</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .contact-info {
+            text-align: right;
+        }
+
+        .contact-info a {
+            color: #f39c12;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Navigation */
+        nav {
+            background: #34495e;
+            padding: 0.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu li {
+            margin: 0 1rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: #f39c12;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23d4b896" width="1200" height="600"/><circle fill="%23c4a676" cx="200" cy="150" r="80"/><circle fill="%23c4a676" cx="800" cy="300" r="100"/><circle fill="%23c4a676" cx="1000" cy="100" r="60"/><rect fill="%23b8955a" x="0" y="500" width="1200" height="100"/></svg>');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .cta-button {
+            background: #f39c12;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #e67e22;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        /* Price Table */
+        .price-table {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #f39c12;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-menu li {
+                margin: 0.25rem 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
-    <h1>📋 Диспетчер грузоперевозок</h1>
-    <div class="date-selector">
-      <select id="sheetSelector">
-        <option value="09.06.2025">09.06.2025</option>
-        <option value="10.06.2025">10.06.2025</option>
-        <option value="11.06.2025">11.06.2025</option>
-      </select>
-    </div>
-  </div>
-  
-  <div class="demo-notice">
-    <h3>⚠️ Это демо-версия</h3>
-    <p>Данные сохраняются только в браузере</p>
-    <p>Для полной версии с Google Sheets и Telegram:</p>
-    <p><a href="https://github.com/YOUR_USERNAME/YOUR_REPO#установка" target="_blank">Смотрите инструкцию по установке →</a></p>
-  </div>
-  
-  <div class="main-actions">
-    <button onclick="addNewTask()" class="big-button" style="background: #f39c12;">
-      <span class="icon">➕</span>
-      <span class="text">Новый заказ</span>
-    </button>
-    <button onclick="saveData()" class="big-button success">
-      <span class="icon">💾</span>
-      <span class="text">Сохранить</span>
-    </button>
-    <button onclick="sendToTelegram()" class="big-button primary">
-      <span class="icon">📤</span>
-      <span class="text">Telegram</span>
-    </button>
-    <button onclick="copyToClipboard()" class="big-button">
-      <span class="icon">📋</span>
-      <span class="text">Копировать</span>
-    </button>
-  </div>
-  
-  <div class="tasks-container" id="tasksContainer">
-    <!-- Здесь будут карточки заданий -->
-  </div>
-  
-  <div class="more-actions">
-    <button onclick="duplicateSelected()" class="secondary-button">📑 Дублировать</button>
-    <button onclick="deleteSelected()" class="secondary-button">🗑️ Удалить выбранные</button>
-    <button onclick="showTemplates()" class="secondary-button">📝 Шаблоны</button>
-    <button onclick="clearAll()" class="secondary-button">🗑️ Очистить все</button>
-  </div>
-  
-  <div id="status" class="status" style="display:none;"></div>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">СтройПесок</div>
+                <div class="contact-info">
+                    <div>📞 <a href="tel:+79001234567">+7 (900) 123-45-67</a></div>
+                    <div>✉️ <a href="mailto:info@stroypesok.ru">info@stroypesok.ru</a></div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-  <script>
-    // Демо-версия для GitHub Pages
-    let currentSheet = '09.06.2025';
-    let selectedTasks = new Set();
-    let tasksData = [];
-    
-    // Шаблоны
-    const templates = {
-      machines: ['107', '486', '513', '444', '284', '295', '689', '986', '795', 'лагуна'],
-      cargo: ['песок', 'щебень 31/63 м800', 'пгс', 'асфальт', 'почасовая'],
-      customers: [
-        'ООО Союзпромсирой',
-        'ООО Римар',
-        'ООО ИЖГОРОДСТРОЙ',
-        'ООО Инком',
-        'ООО Дорстрой 44',
-        'ООО ДМС'
-      ]
-    };
-    
-    // Инициализация
-    document.addEventListener('DOMContentLoaded', () => {
-      loadFromLocalStorage();
-      renderTasks();
-      
-      // Обработчик изменения даты
-      document.getElementById('sheetSelector').addEventListener('change', (e) => {
-        saveToLocalStorage();
-        currentSheet = e.target.value;
-        loadFromLocalStorage();
-        renderTasks();
-      });
-    });
-    
-    // Загрузка из localStorage
-    function loadFromLocalStorage() {
-      const saved = localStorage.getItem('dispatcher_' + currentSheet);
-      if (saved) {
-        tasksData = JSON.parse(saved);
-      } else {
-        // Демо данные
-        tasksData = [
-          {
-            machines: '107, 486',
-            orders: [
-              {
-                cargo: 'песок',
-                from: 'селычка',
-                to: 'завьялово',
-                customer: 'ООО Союзпромсирой',
-                note: ''
-              }
-            ]
-          }
-        ];
-      }
-    }
-    
-    // Сохранение в localStorage
-    function saveToLocalStorage() {
-      localStorage.setItem('dispatcher_' + currentSheet, JSON.stringify(tasksData));
-    }
-    
-    // Отрисовка заданий
-    function renderTasks() {
-      const container = document.getElementById('tasksContainer');
-      container.innerHTML = '';
-      selectedTasks.clear();
-      
-      tasksData.forEach((task, index) => {
-        if (!task.machines && task.orders.every(o => !o.cargo && !o.from && !o.to && !o.customer)) return;
-        
-        const taskCard = createTaskCard(task, index);
-        container.appendChild(taskCard);
-      });
-    }
-    
-    // Создание карточки задания
-    function createTaskCard(taskData, index) {
-      const card = document.createElement('div');
-      card.className = 'task-card';
-      card.dataset.index = index;
-      
-      let html = `
-        <div class="machine-header">
-          <div class="machine-name" contenteditable="true" data-field="machines">🚛 ${taskData.machines || 'Машина'}</div>
-          <input type="checkbox" class="select-checkbox" onchange="toggleSelection(${index})">
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#products">Продукция</a></li>
+                <li><a href="#prices">Цены</a></li>
+                <li><a href="#delivery">Доставка</a></li>
+                <li><a href="#about">О компании</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
         </div>
-        <div class="sub-orders">
-      `;
-      
-      taskData.orders.forEach((order, orderIndex) => {
-        html += `
-          <div class="sub-order" data-order-index="${orderIndex}">
-            <div class="sub-order-header">
-              <span>Заказ ${orderIndex + 1}</span>
-              ${taskData.orders.length > 1 ? `<button class="remove-sub-order" onclick="removeSubOrder(${index}, ${orderIndex})">×</button>` : ''}
-            </div>
-            <div class="task-detail">
-              <span class="label">📦 Груз:</span>
-              <div class="value" contenteditable="true" data-field="cargo" data-order="${orderIndex}" onclick="showQuickMenu(this, 'cargo')">${order.cargo || ''}</div>
-            </div>
-            <div class="task-detail">
-              <span class="label">📍 Откуда:</span>
-              <div class="value" contenteditable="true" data-field="from" data-order="${orderIndex}">${order.from || ''}</div>
-            </div>
-            <div class="task-detail">
-              <span class="label">📍 Куда:</span>
-              <div class="value" contenteditable="true" data-field="to" data-order="${orderIndex}">${order.to || ''}</div>
-            </div>
-            <div class="task-detail">
-              <span class="label">👤 Заказчик:</span>
-              <div class="value" contenteditable="true" data-field="customer" data-order="${orderIndex}" onclick="showQuickMenu(this, 'customers')">${order.customer || ''}</div>
-            </div>
-            <div class="task-detail">
-              <span class="label">📝 Заметка:</span>
-              <div class="value" contenteditable="true" data-field="note" data-order="${orderIndex}">${order.note || ''}</div>
-            </div>
-          </div>
-        `;
-      });
-      
-      html += `
-          <button class="add-sub-order-btn" onclick="addSubOrder(${index})">+ Добавить заказ для этих машин</button>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Качественный песок с собственного карьера</h1>
+            <p>Прямые поставки песка любых фракций для строительства, бетонных работ и благоустройства</p>
+            <a href="#contact" class="cta-button">Заказать сейчас</a>
         </div>
-      `;
-      
-      card.innerHTML = html;
-      
-      // Обработчики изменений
-      card.querySelectorAll('[contenteditable]').forEach(elem => {
-        elem.addEventListener('input', () => updateTaskData(index, elem));
-      });
-      
-      return card;
-    }
-    
-    // Обновление данных
-    function updateTaskData(index, element) {
-      const field = element.dataset.field;
-      const orderIndex = element.dataset.order;
-      const value = element.textContent.trim();
-      
-      if (field === 'machines') {
-        tasksData[index].machines = value;
-      } else if (orderIndex !== undefined) {
-        tasksData[index].orders[orderIndex][field] = value;
-      }
-      
-      saveToLocalStorage();
-    }
-    
-    // Добавить новое задание
-    function addNewTask() {
-      const newTask = {
-        machines: '',
-        orders: [{
-          cargo: '',
-          from: '',
-          to: '',
-          customer: '',
-          note: ''
-        }]
-      };
-      tasksData.push(newTask);
-      saveToLocalStorage();
-      renderTasks();
-      
-      // Прокрутка к новой карточке
-      setTimeout(() => {
-        const cards = document.querySelectorAll('.task-card');
-        const newCard = cards[cards.length - 1];
-        newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        newCard.querySelector('[data-field="machines"]').focus();
-      }, 100);
-    }
-    
-    // Добавить подзаказ
-    function addSubOrder(taskIndex) {
-      tasksData[taskIndex].orders.push({
-        cargo: '',
-        from: '',
-        to: '',
-        customer: '',
-        note: ''
-      });
-      saveToLocalStorage();
-      renderTasks();
-    }
-    
-    // Удалить подзаказ
-    function removeSubOrder(taskIndex, orderIndex) {
-      if (tasksData[taskIndex].orders.length > 1) {
-        tasksData[taskIndex].orders.splice(orderIndex, 1);
-        saveToLocalStorage();
-        renderTasks();
-        showStatus('Заказ удален', 'success');
-      }
-    }
-    
-    // Переключение выделения
-    function toggleSelection(index) {
-      const card = document.querySelector(`.task-card[data-index="${index}"]`);
-      if (selectedTasks.has(index)) {
-        selectedTasks.delete(index);
-        card.classList.remove('selected');
-      } else {
-        selectedTasks.add(index);
-        card.classList.add('selected');
-      }
-    }
-    
-    // Сохранить данные
-    function saveData() {
-      saveToLocalStorage();
-      showStatus('Сохранено локально!', 'success');
-    }
-    
-    // Отправка в Telegram (демо)
-    function sendToTelegram() {
-      const message = formatForTelegram();
-      copyToClipboard();
-      showStatus('Скопировано! В полной версии отправляется в Telegram', 'success');
-    }
-    
-    // Копировать в буфер обмена
-    function copyToClipboard() {
-      const message = formatForTelegram();
-      
-      navigator.clipboard.writeText(message)
-        .then(() => showStatus('Скопировано в буфер обмена!', 'success'))
-        .catch(() => {
-          const textarea = document.createElement('textarea');
-          textarea.value = message;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textarea);
-          showStatus('Скопировано!', 'success');
+    </section>
+
+    <main class="container">
+        <section id="products" class="fade-in">
+            <h2>Наша продукция</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <h3>🏗️ Песок строительный</h3>
+                    <p><strong>Фракция:</strong> 0-5 мм</p>
+                    <p><strong>Применение:</strong> Кладочные и штукатурные работы, приготовление растворов</p>
+                    <p><strong>Характеристики:</strong> Модуль крупности 1,5-2,0, содержание глины не более 3%</p>
+                </div>
+                
+                <div class="product-card">
+                    <h3>🏢 Песок бетонный</h3>
+                    <p><strong>Фракция:</strong> 0-5 мм</p>
+                    <p><strong>Применение:</strong> Производство бетона, железобетонных изделий</p>
+                    <p><strong>Характеристики:</strong> Модуль крупности 2,0-2,5, класс по прочности 800-1000</p>
+                </div>
+                
+                <div class="product-card">
+                    <h3>🛣️ Песок дорожный</h3>
+                    <p><strong>Фракция:</strong> 0-10 мм</p>
+                    <p><strong>Применение:</strong> Дорожное строительство, подсыпка, планировка</p>
+                    <p><strong>Характеристики:</strong> Повышенная прочность, морозостойкость</p>
+                </div>
+                
+                <div class="product-card">
+                    <h3>🌿 Песок мытый</h3>
+                    <p><strong>Фракция:</strong> 0-3 мм</p>
+                    <p><strong>Применение:</strong> Благоустройство, детские площадки, фильтрация</p>
+                    <p><strong>Характеристики:</strong> Очищен от глины и органических примесей</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="prices" class="fade-in">
+            <h2>Цены на песок</h2>
+            <div class="price-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Вид песка</th>
+                            <th>Фракция, мм</th>
+                            <th>Розница (за м³)</th>
+                            <th>Опт от 10 м³</th>
+                            <th>Опт от 100 м³</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Строительный</td>
+                            <td>0-5</td>
+                            <td>850 ₽</td>
+                            <td>750 ₽</td>
+                            <td>650 ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Бетонный</td>
+                            <td>0-5</td>
+                            <td>900 ₽</td>
+                            <td>800 ₽</td>
+                            <td>700 ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Дорожный</td>
+                            <td>0-10</td>
+                            <td>800 ₽</td>
+                            <td>700 ₽</td>
+                            <td>600 ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Мытый</td>
+                            <td>0-3</td>
+                            <td>1200 ₽</td>
+                            <td>1100 ₽</td>
+                            <td>1000 ₽</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin-top: 1rem; font-style: italic; text-align: center;">
+                * Цены указаны с НДС. Возможны сезонные колебания цен. Актуальные цены уточняйте по телефону.
+            </p>
+        </section>
+
+        <section id="delivery" class="fade-in">
+            <h2>Доставка и условия</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🚛</div>
+                    <h3>Собственный автопарк</h3>
+                    <p>Доставка самосвалами от 5 до 25 тонн. Точное соблюдение сроков поставки.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">📋</div>
+                    <h3>Полный комплект документов</h3>
+                    <p>Паспорт качества, сертификаты соответствия, накладные с точным весом.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">⚖️</div>
+                    <h3>Точное взвешивание</h3>
+                    <p>Автомобильные весы на карьере. Гарантия точности поставляемого объема.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🏪</div>
+                    <h3>Самовывоз</h3>
+                    <p>Возможность самовывоза с карьера. Работаем с 7:00 до 19:00 без выходных.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; padding: 1.5rem; background: #e8f4fd; border-radius: 8px;">
+                <h3 style="color: #2c3e50; margin-bottom: 1rem;">Зоны доставки:</h3>
+                <ul style="list-style-type: none; padding: 0;">
+                    <li>📍 <strong>Бесплатная доставка:</strong> в радиусе 10 км от карьера</li>
+                    <li>📍 <strong>Платная доставка:</strong> до 50 км - 15 ₽/км за машину</li>
+                    <li>📍 <strong>Дальние расстояния:</strong> свыше 50 км - договорная цена</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="about" class="fade-in">
+            <h2>О компании СтройПесок</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+                <div>
+                    <p style="margin-bottom: 1rem;">
+                        Компания "СтройПесок" работает на рынке строительных материалов с 2015 года. 
+                        Мы владеем собственным карьером и обеспечиваем стабильные поставки качественного песка.
+                    </p>
+                    
+                    <p style="margin-bottom: 1rem;">
+                        Наш карьер расположен в экологически чистом районе, что гарантирует высокое 
+                        качество добываемого песка без вредных примесей.
+                    </p>
+
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem;">
+                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">Наши преимущества:</h3>
+                        <ul>
+                            <li>✅ Собственное производство - контроль качества на всех этапах</li>
+                            <li>✅ Лабораторный контроль каждой партии</li>
+                            <li>✅ Гибкая система скидок для постоянных клиентов</li>
+                            <li>✅ Работа с НДС и без НДС</li>
+                            <li>✅ Возможность отсрочки платежа</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="background: linear-gradient(45deg, #f39c12, #e67e22); color: white; padding: 2rem; border-radius: 10px;">
+                        <h3 style="margin-bottom: 1rem;">📊 Наша статистика</h3>
+                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0;">500+</div>
+                        <p>довольных клиентов</p>
+                        
+                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0;">50 000+</div>
+                        <p>м³ песка поставлено</p>
+                        
+                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0;">8</div>
+                        <p>лет на рынке</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="fade-in">
+            <h2>Связаться с нами</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+                <div class="contact-form">
+                    <h3 style="margin-bottom: 1.5rem; text-align: center;">Оставить заявку</h3>
+                    <form onsubmit="submitForm(event)">
+                        <div class="form-group">
+                            <label for="name">Имя *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Телефон *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sand-type">Тип песка</label>
+                            <select id="sand-type" name="sand-type">
+                                <option value="">Выберите тип песка</option>
+                                <option value="construction">Строительный</option>
+                                <option value="concrete">Бетонный</option>
+                                <option value="road">Дорожный</option>
+                                <option value="washed">Мытый</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="volume">Объем (м³)</label>
+                            <input type="number" id="volume" name="volume" min="1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Дополнительные требования</label>
+                            <textarea id="message" name="message" rows="4" placeholder="Укажите адрес доставки, сроки, особые требования..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="cta-button" style="width: 100%;">
+                            Отправить заявку
+                        </button>
+                    </form>
+                </div>
+                
+                <div>
+                    <h3 style="margin-bottom: 1.5rem;">Контактная информация</h3>
+                    
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">📞 Телефоны:</h4>
+                        <p><strong>Отдел продаж:</strong> +7 (900) 123-45-67</p>
+                        <p><strong>Диспетчер:</strong> +7 (900) 123-45-68</p>
+                        <p><strong>Руководитель:</strong> +7 (900) 123-45-69</p>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">📧 Email:</h4>
+                        <p><strong>Общие вопросы:</strong> info@stroypesok.ru</p>
+                        <p><strong>Коммерческий отдел:</strong> sales@stroypesok.ru</p>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">📍 Адрес карьера:</h4>
+                        <p>Московская область, Дмитровский район, дер. Песчаное, карьер "СтройПесок"</p>
+                        <p><strong>Режим работы:</strong> ежедневно с 7:00 до 19:00</p>
+                    </div>
+                    
+                    <div style="background: #e8f4fd; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">💰 Способы оплаты:</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>💳 Безналичный расчет</li>
+                            <li>💵 Наличными на карьере</li>
+                            <li>🏦 Банковский перевод</li>
+                            <li>📱 Электронные платежи</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>СтройПесок</h3>
+                    <p>Надежный поставщик качественного песка для строительных нужд с 2015 года.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Быстрые ссылки</h3>
+                    <ul style="list-style: none;">
+                        <li><a href="#products" style="color: #bdc3c7;">Продукция</a></li>
+                        <li><a href="#prices" style="color: #bdc3c7;">Цены</a></li>
+                        <li><a href="#delivery" style="color: #bdc3c7;">Доставка</a></li>
+                        <li><a href="#contact" style="color: #bdc3c7;">Контакты</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Документы</h3>
+                    <ul style="list-style: none;">
+                        <li><a href="#" style="color: #bdc3c7;">Сертификаты качества</a></li>
+                        <li><a href="#" style="color: #bdc3c7;">Лицензии</a></li>
+                        <li><a href="#" style="color: #bdc3c7;">Паспорта качества</a></li>
+                        <li><a href="#" style="color: #bdc3c7;">Реквизиты компании</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid #34495e; padding-top: 1rem; text-align: center;">
+                <p>&copy; 2025 СтройПесок. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling для навигации
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
-    }
-    
-    // Форматирование для Telegram
-    function formatForTelegram() {
-      let message = `📅 ${currentSheet}\n\n`;
-      
-      tasksData.forEach((task, taskIndex) => {
-        if (!task.machines) return;
-        
-        message += `🚛 ${task.machines}\n`;
-        
-        task.orders.forEach((order, orderIndex) => {
-          if (task.orders.length > 1) {
-            message += `  ${orderIndex + 1}. `;
-          } else {
-            message += `  `;
-          }
-          
-          message += `📦 ${order.cargo || '-'} | `;
-          message += `📍 ${order.from || '?'} → ${order.to || '?'} | `;
-          message += `👤 ${order.customer || '-'}`;
-          
-          if (order.note) {
-            message += `\n     📝 ${order.note}`;
-          }
-          message += '\n';
-        });
-        
-        message += '\n';
-      });
-      
-      return message.trim();
-    }
-    
-    // Дублировать выбранные
-    function duplicateSelected() {
-      if (selectedTasks.size === 0) {
-        showStatus('Выберите задания для дублирования', 'error');
-        return;
-      }
-      
-      const indices = Array.from(selectedTasks).sort((a, b) => b - a);
-      indices.forEach(index => {
-        const original = tasksData[index];
-        const duplicate = {
-          machines: '',
-          orders: original.orders.map(order => ({...order}))
+
+        // Анимация появления элементов при скролле
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         };
-        tasksData.splice(index + 1, 0, duplicate);
-      });
-      
-      saveToLocalStorage();
-      renderTasks();
-      showStatus(`Продублировано заданий: ${indices.length}`, 'success');
-    }
-    
-    // Удалить выбранные
-    function deleteSelected() {
-      if (selectedTasks.size === 0) {
-        showStatus('Выберите задания для удаления', 'error');
-        return;
-      }
-      
-      if (!confirm(`Удалить выбранные задания (${selectedTasks.size} шт.)?`)) {
-        return;
-      }
-      
-      const indices = Array.from(selectedTasks).sort((a, b) => b - a);
-      indices.forEach(index => {
-        tasksData.splice(index, 1);
-      });
-      
-      saveToLocalStorage();
-      renderTasks();
-      showStatus('Задания удалены', 'success');
-    }
-    
-    // Показать шаблоны
-    function showTemplates() {
-      const menu = document.createElement('div');
-      menu.className = 'quick-menu';
-      
-      menu.innerHTML = `
-        <button class="quick-menu-close" onclick="this.parentElement.remove()">×</button>
-        <h3>📋 Быстрые шаблоны</h3>
-        
-        <h4 style="margin-top: 20px;">🚛 Популярные машины</h4>
-        ${templates.machines.map(m => 
-          `<button class="quick-option" onclick="quickAddMachine('${m}')">${m}</button>`
-        ).join('')}
-      `;
-      
-      document.body.appendChild(menu);
-    }
-    
-    // Выбор из быстрого меню
-    function selectQuickOption(field, taskIndex, value, orderIndex) {
-      const card = document.querySelector(`.task-card[data-index="${taskIndex}"]`);
-      const selector = orderIndex !== undefined ? 
-        `[data-field="${field}"][data-order="${orderIndex}"]` : 
-        `[data-field="${field}"]`;
-      const fieldElement = card.querySelector(selector);
-      
-      fieldElement.textContent = value;
-      
-      // Обновляем данные
-      if (field === 'machines') {
-        tasksData[taskIndex].machines = value;
-      } else {
-        const oIndex = orderIndex !== undefined ? parseInt(orderIndex) : 0;
-        tasksData[taskIndex].orders[oIndex][field] = value;
-      }
-      
-      saveToLocalStorage();
-      document.querySelector('.quick-menu').remove();
-    }
-    
-    // Очистить все
-    function clearAll() {
-      if (confirm('Удалить все задания? Это действие нельзя отменить!')) {
-        tasksData = [];
-        saveToLocalStorage();
-        renderTasks();
-        showStatus('Все задания удалены', 'success');
-      }
-    }
-    
-    // Показать статус
-    function showStatus(message, type = '') {
-      const status = document.getElementById('status');
-      status.textContent = message;
-      status.className = 'status ' + type;
-      status.style.display = 'block';
-      
-      setTimeout(() => {
-        status.style.display = 'none';
-      }, 3000);
-    }
-  </script>
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Применяем анимацию ко всем секциям
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(section);
+        });
+
+        // Обработка формы
+        function submitForm(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            // Простая валидация
+            if (!data.name || !data.phone) {
+                alert('Пожалуйста, заполните обязательные поля (Имя и Телефон)');
+                return;
+            }
+            
+            // Имитация отправки формы
+            const button = event.target.querySelector('button[type="submit"]');
+            const originalText = button.textContent;
+            
+            button.textContent = 'Отправляется...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                alert(`Спасибо, ${data.name}! Ваша заявка принята. Мы свяжемся с вами в течение часа.`);
+                event.target.reset();
+                button.textContent = originalText;
+                button.disabled = false;
+            }, 1500);
+        }
+
+        // Подсчет примерной стоимости в реальном времени
+        document.getElementById('sand-type').addEventListener('change', calculatePrice);
+        document.getElementById('volume').addEventListener('input', calculatePrice);
+
+        function calculatePrice() {
+            const sandType = document.getElementById('sand-type').value;
+            const volume = parseInt(document.getElementById('volume').value) || 0;
+            
+            const prices = {
+                'construction': { retail: 850, wholesale10: 750, wholesale100: 650 },
+                'concrete': { retail: 900, wholesale10: 800, wholesale100: 700 },
+                'road': { retail: 800, wholesale10: 700, wholesale100: 600 },
+                'washed': { retail: 1200, wholesale10: 1100, wholesale100: 1000 }
+            };
+            
+            if (sandType && volume > 0) {
+                const priceData = prices[sandType];
+                let price;
+                
+                if (volume >= 100) {
+                    price = priceData.wholesale100;
+                } else if (volume >= 10) {
+                    price = priceData.wholesale10;
+                } else {
+                    price = priceData.retail;
+                }
+                
+                const total = price * volume;
+                
+                // Добавляем информацию о стоимости под формой
+                let priceInfo = document.getElementById('price-info');
+                if (!priceInfo) {
+                    priceInfo = document.createElement('div');
+                    priceInfo.id = 'price-info';
+                    priceInfo.style.marginTop = '1rem';
+                    priceInfo.style.padding = '1rem';
+                    priceInfo.style.background = '#e8f4fd';
+                    priceInfo.style.borderRadius = '8px';
+                    priceInfo.style.textAlign = 'center';
+                    document.querySelector('.contact-form').appendChild(priceInfo);
+                }
+                
+                priceInfo.innerHTML = `
+                    <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">Примерная стоимость:</h4>
+                    <p style="font-size: 1.2rem; color: #f39c12; font-weight: bold;">
+                        ${total.toLocaleString()} ₽ (${price} ₽/м³)
+                    </p>
+                    <p style="font-size: 0.9rem; color: #666;">
+                        ${volume >= 100 ? 'Оптовая цена от 100 м³' : 
+                          volume >= 10 ? 'Оптовая цена от 10 м³' : 'Розничная цена'}
+                    </p>
+                `;
+            } else {
+                const priceInfo = document.getElementById('price-info');
+                if (priceInfo) {
+                    priceInfo.remove();
+                }
+            }
+        }
+
+        // Активное выделение текущего раздела в навигации
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.style.background = '';
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.style.background = '#f39c12';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-    
-    // Быстрое добавление машины
-    function quickAddMachine(machine) {
-      const newTask = {
-        machines: machine,
-        orders: [{
-          cargo: '',
-          from: '',
-          to: '',
-          customer: '',
-          note: ''
-        }]
-      };
-      
-      tasksData.push(newTask);
-      saveToLocalStorage();
-      renderTasks();
-      
-      document.querySelector('.quick-menu').remove();
-      showStatus(`Добавлена машина ${machine}`, 'success');
-    }
-    
-    // Показать быстрое меню
-    function showQuickMenu(element, type) {
-      const existingMenu = document.querySelector('.quick-menu');
-      if (existingMenu) existingMenu.remove();
-      
-      const menu = document.createElement('div');
-      menu.className = 'quick-menu';
-      
-      const options = templates[type] || [];
-      const taskIndex = element.closest('.task-card').dataset.index;
-      const orderIndex = element.dataset.order;
-      const field = element.dataset.field;
-      
-      menu.innerHTML = `
-        <button class="quick-menu-close" onclick="this.parentElement.remove()">×</button>
-        <h3>Выберите ${type === 'cargo' ? 'груз' : 'заказчика'}</h3>
-        ${options.map(option => 
-          `<button class="quick-option" onclick="selectQuickOption('${field}', ${taskIndex}, '${option.replace(/'/g, "\\'")}', ${orderIndex})">${option}</button>`
-        ).join('')}
-      `;
-      
-      document.body.appendChild(menu);
-    }
