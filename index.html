@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>СтройПесок - Добыча и продажа песка с карьера</title>
+    <title>СтройПесок - Добыча и продажа песка с карьера | Прямые поставки по России</title>
+    <meta name="description" content="Собственный карьер песка. Прямые поставки строительного, бетонного, дорожного песка. Доставка 24/7. Сертификаты качества. ☎ +7 (900) 123-45-67">
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #f39c12;
+            --accent-color: #e67e22;
+            --light-bg: #f8f9fa;
+            --dark-bg: #1a252f;
+            --sand-color: #d4b896;
+            --text-color: #333;
+            --white: #ffffff;
+            --success-color: #27ae60;
+            --warning-color: #f1c40f;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,10 +26,11 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            overflow-x: hidden;
         }
 
         .container {
@@ -24,25 +39,80 @@
             padding: 0 20px;
         }
 
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        /* Custom Cursor */
+        body {
+            cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="%23f39c12" opacity="0.5"/><circle cx="10" cy="10" r="3" fill="%23e67e22"/></svg>'), auto;
         }
 
-        .header-content {
+        /* Advanced Header */
+        .top-bar {
+            background: var(--dark-bg);
+            color: var(--white);
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .top-bar-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        .logo {
-            font-size: 1.8rem;
+        .top-bar-left {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .top-bar-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .cert-badge {
+            background: var(--success-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
             font-weight: bold;
-            color: #f39c12;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--dark-bg) 100%);
+            color: var(--white);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 2px;
         }
 
         .contact-info {
@@ -50,18 +120,35 @@
         }
 
         .contact-info a {
-            color: #f39c12;
+            color: var(--secondary-color);
             text-decoration: none;
             font-weight: bold;
+            transition: color 0.3s;
         }
 
-        /* Navigation */
+        .contact-info a:hover {
+            color: var(--accent-color);
+        }
+
+        .urgent-contact {
+            background: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 126, 34, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 126, 34, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 126, 34, 0); }
+        }
+
+        /* Enhanced Navigation */
         nav {
-            background: #34495e;
+            background: rgba(52, 73, 94, 0.95);
+            backdrop-filter: blur(10px);
             padding: 0.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
         .nav-menu {
@@ -72,188 +159,626 @@
         }
 
         .nav-menu li {
-            margin: 0 1rem;
+            margin: 0 0.5rem;
+            position: relative;
         }
 
         .nav-menu a {
-            color: white;
+            color: var(--white);
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: background 0.3s;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .nav-menu a:hover {
-            background: #f39c12;
+        .nav-menu a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
         }
 
-        /* Hero Section */
+        .nav-menu a:hover::before {
+            left: 100%;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        /* Immersive Hero Section */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23d4b896" width="1200" height="600"/><circle fill="%23c4a676" cx="200" cy="150" r="80"/><circle fill="%23c4a676" cx="800" cy="300" r="100"/><circle fill="%23c4a676" cx="1000" cy="100" r="60"/><rect fill="%23b8955a" x="0" y="500" width="1200" height="100"/></svg>');
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(45deg, 
+                rgba(44, 62, 80, 0.8) 0%, 
+                rgba(26, 37, 47, 0.9) 50%, 
+                rgba(44, 62, 80, 0.8) 100%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23d4b896" width="1200" height="800"/><circle fill="%23c4a676" cx="150" cy="200" r="120"/><circle fill="%23c4a676" cx="900" cy="400" r="150"/><circle fill="%23c4a676" cx="1100" cy="150" r="80"/><circle fill="%23b8955a" cx="300" cy="600" r="100"/><circle fill="%23b8955a" cx="700" cy="100" r="60"/><path fill="%23a0804a" d="M0,600 Q600,500 1200,650 L1200,800 L0,800 Z"/></svg>');
             background-size: cover;
             background-position: center;
-            color: white;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            color: var(--white);
             text-align: center;
-            padding: 4rem 0;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(44, 62, 80, 0.1) 0%, 
+                rgba(243, 156, 18, 0.1) 50%, 
+                rgba(44, 62, 80, 0.1) 100%);
+            animation: gradientShift 8s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(45deg, var(--white), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .hero p {
-            font-size: 1.2rem;
+        .hero-subtitle {
+            font-size: 1.5rem;
             margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
         }
 
         .cta-button {
-            background: #f39c12;
-            color: white;
+            background: var(--secondary-color);
+            color: var(--white);
             padding: 1rem 2rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             font-size: 1.1rem;
+            font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
-            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
         .cta-button:hover {
-            background: #e67e22;
+            background: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(243, 156, 18, 0.3);
         }
 
-        /* Main Content */
-        main {
-            padding: 2rem 0;
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid var(--white);
         }
 
-        section {
-            margin-bottom: 3rem;
-            background: white;
+        .cta-button.secondary:hover {
+            background: var(--white);
+            color: var(--primary-color);
+        }
+
+        /* Product Catalog by Project Type */
+        .products-by-project {
+            padding: 4rem 0;
+            background: var(--white);
+        }
+
+        .project-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
             padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
-            font-size: 2rem;
+            border-radius: 20px;
             text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
         }
 
-        /* Products Grid */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 0;
+        }
+
+        .project-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .project-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .recommended-products {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--secondary-color);
+        }
+
+        .recommended-products.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-tag {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 0.25rem;
+            font-weight: 600;
+        }
+
+        .quick-order {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-order:hover {
+            background: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* Enhanced Product Grid */
+        .enhanced-products {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, var(--light-bg) 0%, var(--white) 50%, var(--light-bg) 100%);
+        }
+
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
-        .product-card {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid #f39c12;
-            transition: transform 0.3s;
+        .enhanced-product-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
         }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        .enhanced-product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
         }
 
-        .product-card h3 {
-            color: #2c3e50;
+        .product-image {
+            height: 200px;
+            background: linear-gradient(45deg, var(--sand-color), #c4a676);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .product-image::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: 30px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .product-content {
+            padding: 2rem;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 1rem;
         }
 
-        /* Price Table */
-        .price-table {
-            overflow-x: auto;
+        .product-title {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
+        .quality-badge {
+            background: var(--success-color);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
-        th, td {
+        .product-specs {
+            background: var(--light-bg);
             padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 1rem 0;
         }
 
-        th {
-            background: #2c3e50;
-            color: white;
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
         }
 
-        tr:hover {
-            background: #f5f5f5;
+        .spec-row:last-child {
+            margin-bottom: 0;
         }
 
-        /* Features */
-        .features {
+        .spec-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .price-tag {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 0.75rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex: 1;
+            text-align: center;
+        }
+
+        .order-btn {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .order-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* Interactive Price Calculator */
+        .price-calculator {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-calculator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="70" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="30" cy="80" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>');
+            animation: starMove 20s linear infinite;
+        }
+
+        @keyframes starMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100px); }
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .calculator-form {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--white);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            background: var(--white);
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.3);
+        }
+
+        .calculator-result {
+            text-align: center;
+        }
+
+        .result-display {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .price-details {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .savings-info {
+            background: var(--success-color);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        /* Company Trust Section */
+        .trust-section {
+            padding: 4rem 0;
+            background: var(--white);
+        }
+
+        .trust-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
-        .feature {
+        .trust-item {
             text-align: center;
-            padding: 1.5rem;
+            padding: 2rem;
+            border-radius: 15px;
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .feature-icon {
+        .trust-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .trust-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .trust-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .trust-icon {
             font-size: 3rem;
-            color: #f39c12;
+            color: var(--secondary-color);
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Contact Form */
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .form-group {
+        .trust-item h3 {
+            color: var(--primary-color);
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #2c3e50;
+        .trust-item p {
+            color: #666;
+            position: relative;
+            z-index: 1;
         }
 
-        input, textarea, select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #f39c12;
-        }
-
-        /* Footer */
+        /* Enhanced Footer */
         footer {
-            background: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--primary-color) 100%);
+            color: var(--white);
+            padding: 3rem 0 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color), var(--secondary-color));
         }
 
         .footer-content {
@@ -264,19 +789,104 @@
         }
 
         .footer-section h3 {
-            color: #f39c12;
+            color: var(--secondary-color);
             margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
 
-        /* Responsive */
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--secondary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(243, 156, 18, 0.3);
+            border-top: 3px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
+            .container {
+                padding: 0 15px;
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .calculator-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
 
             .nav-menu {
@@ -284,353 +894,546 @@
                 align-items: center;
             }
 
-            .nav-menu li {
-                margin: 0.25rem 0;
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .top-bar-content {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
             }
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
 
-        .fade-in {
-            animation: fadeInUp 0.6s ease-out;
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary-color: #000000;
+                --secondary-color: #ffffff;
+                --text-color: #000000;
+                --light-bg: #ffffff;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content">
+                <div class="top-bar-left">
+                    <span class="cert-badge">✓ СЕРТИФИЦИРОВАНО</span>
+                    <span>📍 Работаем 24/7 без выходных</span>
+                    <span>🚛 Собственный автопарк</span>
+                </div>
+                <div class="top-bar-right">
+                    <span>💳 Работаем с НДС и без НДС</span>
+                    <a href="tel:+79001234567" class="urgent-contact">Срочный заказ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
                 <div class="logo">СтройПесок</div>
                 <div class="contact-info">
                     <div>📞 <a href="tel:+79001234567">+7 (900) 123-45-67</a></div>
+                    <div>📞 <a href="tel:+79001234568">+7 (900) 123-45-68</a> (диспетчер)</div>
                     <div>✉️ <a href="mailto:info@stroypesok.ru">info@stroypesok.ru</a></div>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- Navigation -->
     <nav>
         <div class="container">
             <ul class="nav-menu">
-                <li><a href="#home">Главная</a></li>
-                <li><a href="#products">Продукция</a></li>
-                <li><a href="#prices">Цены</a></li>
-                <li><a href="#delivery">Доставка</a></li>
-                <li><a href="#about">О компании</a></li>
-                <li><a href="#contact">Контакты</a></li>
+                <li><a href="#home" class="nav-link active">Главная</a></li>
+                <li><a href="#projects" class="nav-link">По проектам</a></li>
+                <li><a href="#products" class="nav-link">Каталог</a></li>
+                <li><a href="#calculator" class="nav-link">Калькулятор</a></li>
+                <li><a href="#delivery" class="nav-link">Доставка</a></li>
+                <li><a href="#about" class="nav-link">О компании</a></li>
+                <li><a href="#contact" class="nav-link">Контакты</a></li>
             </ul>
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="container">
-            <h1>Качественный песок с собственного карьера</h1>
-            <p>Прямые поставки песка любых фракций для строительства, бетонных работ и благоустройства</p>
-            <a href="#contact" class="cta-button">Заказать сейчас</a>
+            <div class="hero-content">
+                <h1>Прямые поставки песка с собственного карьера</h1>
+                <p class="hero-subtitle">Качественный песок для любых строительных задач. Доставка по России 24/7</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">8+</span>
+                        <span class="stat-label">лет опыта</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">довольных клиентов</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">м³ поставлено</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">работаем</span>
+                    </div>
+                </div>
+
+                <div class="cta-buttons">
+                    <a href="#calculator" class="cta-button">
+                        🧮 Рассчитать стоимость
+                    </a>
+                    <a href="tel:+79001234567" class="cta-button secondary">
+                        📞 Позвонить сейчас
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <main class="container">
-        <section id="products" class="fade-in">
-            <h2>Наша продукция</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <h3>🏗️ Песок строительный</h3>
-                    <p><strong>Фракция:</strong> 0-5 мм</p>
-                    <p><strong>Применение:</strong> Кладочные и штукатурные работы, приготовление растворов</p>
-                    <p><strong>Характеристики:</strong> Модуль крупности 1,5-2,0, содержание глины не более 3%</p>
-                </div>
-                
-                <div class="product-card">
-                    <h3>🏢 Песок бетонный</h3>
-                    <p><strong>Фракция:</strong> 0-5 мм</p>
-                    <p><strong>Применение:</strong> Производство бетона, железобетонных изделий</p>
-                    <p><strong>Характеристики:</strong> Модуль крупности 2,0-2,5, класс по прочности 800-1000</p>
-                </div>
-                
-                <div class="product-card">
-                    <h3>🛣️ Песок дорожный</h3>
-                    <p><strong>Фракция:</strong> 0-10 мм</p>
-                    <p><strong>Применение:</strong> Дорожное строительство, подсыпка, планировка</p>
-                    <p><strong>Характеристики:</strong> Повышенная прочность, морозостойкость</p>
-                </div>
-                
-                <div class="product-card">
-                    <h3>🌿 Песок мытый</h3>
-                    <p><strong>Фракция:</strong> 0-3 мм</p>
-                    <p><strong>Применение:</strong> Благоустройство, детские площадки, фильтрация</p>
-                    <p><strong>Характеристики:</strong> Очищен от глины и органических примесей</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="prices" class="fade-in">
-            <h2>Цены на песок</h2>
-            <div class="price-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Вид песка</th>
-                            <th>Фракция, мм</th>
-                            <th>Розница (за м³)</th>
-                            <th>Опт от 10 м³</th>
-                            <th>Опт от 100 м³</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Строительный</td>
-                            <td>0-5</td>
-                            <td>850 ₽</td>
-                            <td>750 ₽</td>
-                            <td>650 ₽</td>
-                        </tr>
-                        <tr>
-                            <td>Бетонный</td>
-                            <td>0-5</td>
-                            <td>900 ₽</td>
-                            <td>800 ₽</td>
-                            <td>700 ₽</td>
-                        </tr>
-                        <tr>
-                            <td>Дорожный</td>
-                            <td>0-10</td>
-                            <td>800 ₽</td>
-                            <td>700 ₽</td>
-                            <td>600 ₽</td>
-                        </tr>
-                        <tr>
-                            <td>Мытый</td>
-                            <td>0-3</td>
-                            <td>1200 ₽</td>
-                            <td>1100 ₽</td>
-                            <td>1000 ₽</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p style="margin-top: 1rem; font-style: italic; text-align: center;">
-                * Цены указаны с НДС. Возможны сезонные колебания цен. Актуальные цены уточняйте по телефону.
+    <!-- Products by Project Type -->
+    <section id="projects" class="products-by-project">
+        <div class="container">
+            <h2>Выберите ваш тип проекта</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 2rem;">
+                Мы подберем идеальный тип песка для вашей задачи
             </p>
-        </section>
 
-        <section id="delivery" class="fade-in">
-            <h2>Доставка и условия</h2>
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-icon">🚛</div>
-                    <h3>Собственный автопарк</h3>
-                    <p>Доставка самосвалами от 5 до 25 тонн. Точное соблюдение сроков поставки.</p>
-                </div>
-                
-                <div class="feature">
-                    <div class="feature-icon">📋</div>
-                    <h3>Полный комплект документов</h3>
-                    <p>Паспорт качества, сертификаты соответствия, накладные с точным весом.</p>
-                </div>
-                
-                <div class="feature">
-                    <div class="feature-icon">⚖️</div>
-                    <h3>Точное взвешивание</h3>
-                    <p>Автомобильные весы на карьере. Гарантия точности поставляемого объема.</p>
-                </div>
-                
-                <div class="feature">
-                    <div class="feature-icon">🏪</div>
-                    <h3>Самовывоз</h3>
-                    <p>Возможность самовывоза с карьера. Работаем с 7:00 до 19:00 без выходных.</p>
-                </div>
-            </div>
-
-            <div style="margin-top: 2rem; padding: 1.5rem; background: #e8f4fd; border-radius: 8px;">
-                <h3 style="color: #2c3e50; margin-bottom: 1rem;">Зоны доставки:</h3>
-                <ul style="list-style-type: none; padding: 0;">
-                    <li>📍 <strong>Бесплатная доставка:</strong> в радиусе 10 км от карьера</li>
-                    <li>📍 <strong>Платная доставка:</strong> до 50 км - 15 ₽/км за машину</li>
-                    <li>📍 <strong>Дальние расстояния:</strong> свыше 50 км - договорная цена</li>
-                </ul>
-            </div>
-        </section>
-
-        <section id="about" class="fade-in">
-            <h2>О компании СтройПесок</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
-                <div>
-                    <p style="margin-bottom: 1rem;">
-                        Компания "СтройПесок" работает на рынке строительных материалов с 2015 года. 
-                        Мы владеем собственным карьером и обеспечиваем стабильные поставки качественного песка.
-                    </p>
+            <div class="project-selector">
+                <div class="project-card" data-project="residential">
+                    <div class="project-icon">🏠</div>
+                    <h3>Частное строительство</h3>
+                    <p class="project-description">Дома, коттеджи, бани, гаражи, ландшафтные работы</p>
+                    <button class="quick-order" onclick="showProducts('residential')">Подобрать песок</button>
                     
-                    <p style="margin-bottom: 1rem;">
-                        Наш карьер расположен в экологически чистом районе, что гарантирует высокое 
-                        качество добываемого песка без вредных примесей.
-                    </p>
-
-                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem;">
-                        <h3 style="color: #2c3e50; margin-bottom: 1rem;">Наши преимущества:</h3>
-                        <ul>
-                            <li>✅ Собственное производство - контроль качества на всех этапах</li>
-                            <li>✅ Лабораторный контроль каждой партии</li>
-                            <li>✅ Гибкая система скидок для постоянных клиентов</li>
-                            <li>✅ Работа с НДС и без НДС</li>
-                            <li>✅ Возможность отсрочки платежа</li>
-                        </ul>
+                    <div class="recommended-products" id="residential-products">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-color);">Рекомендуемые типы песка:</h4>
+                        <span class="product-tag">Строительный песок 0-5 мм</span>
+                        <span class="product-tag">Мытый песок 0-3 мм</span>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                            📞 <a href="tel:+79001234567" style="color: var(--secondary-color);">+7 (900) 123-45-67</a> | 
+                            ✉️ <a href="mailto:sales@stroypesok.ru" style="color: var(--secondary-color);">sales@stroypesok.ru</a>
+                        </p>
                     </div>
                 </div>
-                
-                <div style="text-align: center;">
-                    <div style="background: linear-gradient(45deg, #f39c12, #e67e22); color: white; padding: 2rem; border-radius: 10px;">
-                        <h3 style="margin-bottom: 1rem;">📊 Наша статистика</h3>
-                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0;">500+</div>
-                        <p>довольных клиентов</p>
-                        
-                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0;">50 000+</div>
-                        <p>м³ песка поставлено</p>
-                        
-                        <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0;">8</div>
-                        <p>лет на рынке</p>
+
+                <div class="project-card" data-project="commercial">
+                    <div class="project-icon">🏢</div>
+                    <h3>Коммерческое строительство</h3>
+                    <p class="project-description">Офисы, торговые центры, склады, производственные здания</p>
+                    <button class="quick-order" onclick="showProducts('commercial')">Подобрать песок</button>
+                    
+                    <div class="recommended-products" id="commercial-products">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-color);">Рекомендуемые типы песка:</h4>
+                        <span class="product-tag">Бетонный песок 0-5 мм</span>
+                        <span class="product-tag">Строительный песок 0-5 мм</span>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                            📞 <a href="tel:+79001234567" style="color: var(--secondary-color);">+7 (900) 123-45-67</a> | 
+                            ✉️ <a href="mailto:sales@stroypesok.ru" style="color: var(--secondary-color);">sales@stroypesok.ru</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="project-card" data-project="infrastructure">
+                    <div class="project-icon">🛣️</div>
+                    <h3>Дорожное строительство</h3>
+                    <p class="project-description">Дороги, мосты, тротуары, парковки, аэродромы</p>
+                    <button class="quick-order" onclick="showProducts('infrastructure')">Подобрать песок</button>
+                    
+                    <div class="recommended-products" id="infrastructure-products">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-color);">Рекомендуемые типы песка:</h4>
+                        <span class="product-tag">Дорожный песок 0-10 мм</span>
+                        <span class="product-tag">Бетонный песок 0-5 мм</span>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                            📞 <a href="tel:+79001234567" style="color: var(--secondary-color);">+7 (900) 123-45-67</a> | 
+                            ✉️ <a href="mailto:sales@stroypesok.ru" style="color: var(--secondary-color);">sales@stroypesok.ru</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="project-card" data-project="landscaping">
+                    <div class="project-icon">🌿</div>
+                    <h3>Благоустройство</h3>
+                    <p class="project-description">Детские площадки, спортивные объекты, парки, фильтрация</p>
+                    <button class="quick-order" onclick="showProducts('landscaping')">Подобрать песок</button>
+                    
+                    <div class="recommended-products" id="landscaping-products">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-color);">Рекомендуемые типы песка:</h4>
+                        <span class="product-tag">Мытый песок 0-3 мм</span>
+                        <span class="product-tag">Строительный песок 0-5 мм</span>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                            📞 <a href="tel:+79001234567" style="color: var(--secondary-color);">+7 (900) 123-45-67</a> | 
+                            ✉️ <a href="mailto:sales@stroypesok.ru" style="color: var(--secondary-color);">sales@stroypesok.ru</a>
+                        </p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="contact" class="fade-in">
-            <h2>Связаться с нами</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
-                <div class="contact-form">
-                    <h3 style="margin-bottom: 1.5rem; text-align: center;">Оставить заявку</h3>
-                    <form onsubmit="submitForm(event)">
-                        <div class="form-group">
-                            <label for="name">Имя *</label>
-                            <input type="text" id="name" name="name" required>
+    <!-- Enhanced Product Catalog -->
+    <section id="products" class="enhanced-products">
+        <div class="container">
+            <h2>Полный каталог продукции</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 2rem;">
+                Высококачественный песок с лабораторным контролем каждой партии
+            </p>
+
+            <div class="products-grid">
+                <div class="enhanced-product-card">
+                    <div class="product-image"></div>
+                    <div class="product-content">
+                        <div class="product-header">
+                            <h3 class="product-title">🏗️ Строительный песок</h3>
+                            <span class="quality-badge">ГОСТ</span>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="phone">Телефон *</label>
-                            <input type="tel" id="phone" name="phone" required>
+                        <div class="product-specs">
+                            <div class="spec-row">
+                                <span class="spec-label">Фракция:</span>
+                                <span>0-5 мм</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Модуль крупности:</span>
+                                <span>1,5-2,0</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Содержание глины:</span>
+                                <span>не более 3%</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Применение:</span>
+                                <span>Кладочные, штукатурные работы</span>
+                            </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email">
+
+                        <div class="product-actions">
+                            <div class="price-tag">от 650 ₽/м³</div>
+                            <button class="order-btn" onclick="orderProduct('строительный')">Заказать</button>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="sand-type">Тип песка</label>
-                            <select id="sand-type" name="sand-type">
-                                <option value="">Выберите тип песка</option>
-                                <option value="construction">Строительный</option>
-                                <option value="concrete">Бетонный</option>
-                                <option value="road">Дорожный</option>
-                                <option value="washed">Мытый</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="volume">Объем (м³)</label>
-                            <input type="number" id="volume" name="volume" min="1">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">Дополнительные требования</label>
-                            <textarea id="message" name="message" rows="4" placeholder="Укажите адрес доставки, сроки, особые требования..."></textarea>
-                        </div>
-                        
-                        <button type="submit" class="cta-button" style="width: 100%;">
-                            Отправить заявку
-                        </button>
-                    </form>
+                    </div>
                 </div>
-                
-                <div>
-                    <h3 style="margin-bottom: 1.5rem;">Контактная информация</h3>
-                    
-                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">📞 Телефоны:</h4>
-                        <p><strong>Отдел продаж:</strong> +7 (900) 123-45-67</p>
-                        <p><strong>Диспетчер:</strong> +7 (900) 123-45-68</p>
-                        <p><strong>Руководитель:</strong> +7 (900) 123-45-69</p>
+
+                <div class="enhanced-product-card">
+                    <div class="product-image"></div>
+                    <div class="product-content">
+                        <div class="product-header">
+                            <h3 class="product-title">🏢 Бетонный песок</h3>
+                            <span class="quality-badge">ПРЕМИУМ</span>
+                        </div>
+                        
+                        <div class="product-specs">
+                            <div class="spec-row">
+                                <span class="spec-label">Фракция:</span>
+                                <span>0-5 мм</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Модуль крупности:</span>
+                                <span>2,0-2,5</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Класс прочности:</span>
+                                <span>800-1000</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Применение:</span>
+                                <span>Производство бетона, ЖБИ</span>
+                            </div>
+                        </div>
+
+                        <div class="product-actions">
+                            <div class="price-tag">от 700 ₽/м³</div>
+                            <button class="order-btn" onclick="orderProduct('бетонный')">Заказать</button>
+                        </div>
                     </div>
-                    
-                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">📧 Email:</h4>
-                        <p><strong>Общие вопросы:</strong> info@stroypesok.ru</p>
-                        <p><strong>Коммерческий отдел:</strong> sales@stroypesok.ru</p>
+                </div>
+
+                <div class="enhanced-product-card">
+                    <div class="product-image"></div>
+                    <div class="product-content">
+                        <div class="product-header">
+                            <h3 class="product-title">🛣️ Дорожный песок</h3>
+                            <span class="quality-badge">ГОСТ</span>
+                        </div>
+                        
+                        <div class="product-specs">
+                            <div class="spec-row">
+                                <span class="spec-label">Фракция:</span>
+                                <span>0-10 мм</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Морозостойкость:</span>
+                                <span>F300</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Прочность:</span>
+                                <span>Повышенная</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Применение:</span>
+                                <span>Дорожное строительство</span>
+                            </div>
+                        </div>
+
+                        <div class="product-actions">
+                            <div class="price-tag">от 600 ₽/м³</div>
+                            <button class="order-btn" onclick="orderProduct('дорожный')">Заказать</button>
+                        </div>
                     </div>
-                    
-                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">📍 Адрес карьера:</h4>
-                        <p>Московская область, Дмитровский район, дер. Песчаное, карьер "СтройПесок"</p>
-                        <p><strong>Режим работы:</strong> ежедневно с 7:00 до 19:00</p>
-                    </div>
-                    
-                    <div style="background: #e8f4fd; padding: 1.5rem; border-radius: 8px;">
-                        <h4 style="color: #2c3e50; margin-bottom: 1rem;">💰 Способы оплаты:</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li>💳 Безналичный расчет</li>
-                            <li>💵 Наличными на карьере</li>
-                            <li>🏦 Банковский перевод</li>
-                            <li>📱 Электронные платежи</li>
-                        </ul>
+                </div>
+
+                <div class="enhanced-product-card">
+                    <div class="product-image"></div>
+                    <div class="product-content">
+                        <div class="product-header">
+                            <h3 class="product-title">🌿 Мытый песок</h3>
+                            <span class="quality-badge">ЭКО</span>
+                        </div>
+                        
+                        <div class="product-specs">
+                            <div class="spec-row">
+                                <span class="spec-label">Фракция:</span>
+                                <span>0-3 мм</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Чистота:</span>
+                                <span>99,5%</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Примеси:</span>
+                                <span>Отсутствуют</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Применение:</span>
+                                <span>Благоустройство, фильтрация</span>
+                            </div>
+                        </div>
+
+                        <div class="product-actions">
+                            <div class="price-tag">от 1000 ₽/м³</div>
+                            <button class="order-btn" onclick="orderProduct('мытый')">Заказать</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
+    <!-- Interactive Price Calculator -->
+    <section id="calculator" class="price-calculator">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem;">Калькулятор стоимости</h2>
+            
+            <div class="calculator-container">
+                <div class="calculator-form">
+                    <h3 style="margin-bottom: 2rem;">Рассчитайте стоимость доставки</h3>
+                    
+                    <div class="form-group">
+                        <label for="calc-sand-type">Тип песка</label>
+                        <select id="calc-sand-type" class="form-select" onchange="calculatePrice()">
+                            <option value="">Выберите тип песка</option>
+                            <option value="construction">Строительный (0-5 мм)</option>
+                            <option value="concrete">Бетонный (0-5 мм)</option>
+                            <option value="road">Дорожный (0-10 мм)</option>
+                            <option value="washed">Мытый (0-3 мм)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calc-volume">Объем (м³)</label>
+                        <input type="number" id="calc-volume" class="form-input" placeholder="Введите объем" min="1" onchange="calculatePrice()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calc-distance">Расстояние доставки (км)</label>
+                        <input type="number" id="calc-distance" class="form-input" placeholder="Расстояние от карьера" min="0" onchange="calculatePrice()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="calc-delivery-type">Тип доставки</label>
+                        <select id="calc-delivery-type" class="form-select" onchange="calculatePrice()">
+                            <option value="standard">Стандартная доставка</option>
+                            <option value="urgent">Срочная доставка (+20%)</option>
+                            <option value="night">Ночная доставка (+30%)</option>
+                            <option value="pickup">Самовывоз (-100% к доставке)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calculator-result">
+                    <div class="result-display">
+                        <div class="price-amount" id="total-price">0 ₽</div>
+                        <div class="price-details" id="price-breakdown">Выберите параметры для расчета</div>
+                        <div class="savings-info" id="savings-info" style="display: none;"></div>
+                    </div>
+                    
+                    <button class="cta-button" onclick="sendCalculation()" id="order-calculated" style="display: none;">
+                        📞 Заказать по расчету
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust and Credentials -->
+    <section class="trust-section">
+        <div class="container">
+            <h2>Почему выбирают СтройПесок</h2>
+            
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <div class="trust-icon">🏆</div>
+                    <h3>Собственное производство</h3>
+                    <p>Контроль качества на всех этапах от добычи до доставки. Лабораторный анализ каждой партии.</p>
+                </div>
+
+                <div class="trust-item">
+                    <div class="trust-icon">📋</div>
+                    <h3>Полный пакет документов</h3>
+                    <p>Сертификаты соответствия ГОСТ, паспорта качества, лицензии на добычу, экологические заключения.</p>
+                </div>
+
+                <div class="trust-item">
+                    <div class="trust-icon">🚛</div>
+                    <h3>Надежная логистика</h3>
+                    <p>Собственный автопарк из 15 самосвалов. Точное соблюдение сроков. GPS-мониторинг всех поставок.</p>
+                </div>
+
+                <div class="trust-item">
+                    <div class="trust-icon">⚖️</div>
+                    <h3>Честное взвешивание</h3>
+                    <p>Поверенные автомобильные весы. Точность ±50 кг. Документальное подтверждение каждой поставки.</p>
+                </div>
+
+                <div class="trust-item">
+                    <div class="trust-icon">💰</div>
+                    <h3>Гибкие условия оплаты</h3>
+                    <p>Наличный и безналичный расчет. Работа с НДС и без. Отсрочка платежа для постоянных клиентов.</p>
+                </div>
+
+                <div class="trust-item">
+                    <div class="trust-icon">🔄</div>
+                    <h3>Гарантия качества</h3>
+                    <p>100% возврат средств при несоответствии заявленным характеристикам. Замена некачественной продукции.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>СтройПесок</h3>
-                    <p>Надежный поставщик качественного песка для строительных нужд с 2015 года.</p>
+                    <p>Ведущий поставщик качественного песка с собственного карьера. Обслуживаем строительные компании по всей России с 2015 года.</p>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link">📱</a>
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">🌐</a>
+                        <a href="#" class="social-link">📍</a>
+                    </div>
                 </div>
-                
+
                 <div class="footer-section">
-                    <h3>Быстрые ссылки</h3>
-                    <ul style="list-style: none;">
-                        <li><a href="#products" style="color: #bdc3c7;">Продукция</a></li>
-                        <li><a href="#prices" style="color: #bdc3c7;">Цены</a></li>
-                        <li><a href="#delivery" style="color: #bdc3c7;">Доставка</a></li>
-                        <li><a href="#contact" style="color: #bdc3c7;">Контакты</a></li>
+                    <h3>Продукция</h3>
+                    <ul>
+                        <li><a href="#products">Строительный песок</a></li>
+                        <li><a href="#products">Бетонный песок</a></li>
+                        <li><a href="#products">Дорожный песок</a></li>
+                        <li><a href="#products">Мытый песок</a></li>
+                        <li><a href="#calculator">Калькулятор стоимости</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
-                    <h3>Документы</h3>
-                    <ul style="list-style: none;">
-                        <li><a href="#" style="color: #bdc3c7;">Сертификаты качества</a></li>
-                        <li><a href="#" style="color: #bdc3c7;">Лицензии</a></li>
-                        <li><a href="#" style="color: #bdc3c7;">Паспорта качества</a></li>
-                        <li><a href="#" style="color: #bdc3c7;">Реквизиты компании</a></li>
+                    <h3>Услуги</h3>
+                    <ul>
+                        <li><a href="#delivery">Доставка песка</a></li>
+                        <li><a href="#about">Лабораторный анализ</a></li>
+                        <li><a href="#projects">Консультации по выбору</a></li>
+                        <li><a href="#contact">Срочные поставки</a></li>
+                        <li><a href="#about">Оптовые скидки</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li>📞 <a href="tel:+79001234567">+7 (900) 123-45-67</a></li>
+                        <li>📞 <a href="tel:+79001234568">+7 (900) 123-45-68</a></li>
+                        <li>✉️ <a href="mailto:info@stroypesok.ru">info@stroypesok.ru</a></li>
+                        <li>📍 Московская область, Дмитровский район</li>
+                        <li>🕒 Ежедневно с 7:00 до 19:00</li>
                     </ul>
                 </div>
             </div>
-            
-            <div style="border-top: 1px solid #34495e; padding-top: 1rem; text-align: center;">
-                <p>&copy; 2025 СтройПесок. Все права защищены.</p>
+
+            <div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 2rem; text-align: center; margin-top: 2rem;">
+                <p>&copy; 2025 СтройПесок. Все права защищены. | 
+                <a href="#" style="color: #bdc3c7;">Политика конфиденциальности</a> | 
+                <a href="#" style="color: #bdc3c7;">Пользовательское соглашение</a></p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Smooth scrolling для навигации
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Smooth scrolling and active navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // Remove active class from all links
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Smooth scroll
+                    targetElement.scrollIntoView({
                         behavior: 'smooth',
                         block: 'start'
                     });
@@ -638,7 +1441,148 @@
             });
         });
 
-        // Анимация появления элементов при скролле
+        // Project product recommendations
+        function showProducts(projectType) {
+            // Hide all product displays
+            document.querySelectorAll('.recommended-products').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show selected project products
+            const productEl = document.getElementById(projectType + '-products');
+            if (productEl) {
+                productEl.classList.add('active');
+            }
+        }
+
+        // Enhanced price calculator
+        function calculatePrice() {
+            const sandType = document.getElementById('calc-sand-type').value;
+            const volume = parseFloat(document.getElementById('calc-volume').value) || 0;
+            const distance = parseFloat(document.getElementById('calc-distance').value) || 0;
+            const deliveryType = document.getElementById('calc-delivery-type').value;
+
+            if (!sandType || volume <= 0) {
+                document.getElementById('total-price').textContent = '0 ₽';
+                document.getElementById('price-breakdown').textContent = 'Выберите параметры для расчета';
+                document.getElementById('order-calculated').style.display = 'none';
+                document.getElementById('savings-info').style.display = 'none';
+                return;
+            }
+
+            // Base prices
+            const prices = {
+                'construction': { retail: 850, wholesale10: 750, wholesale100: 650 },
+                'concrete': { retail: 900, wholesale10: 800, wholesale100: 700 },
+                'road': { retail: 800, wholesale10: 700, wholesale100: 600 },
+                'washed': { retail: 1200, wholesale10: 1100, wholesale100: 1000 }
+            };
+
+            const priceData = prices[sandType];
+            let unitPrice;
+            let priceType;
+
+            // Determine price based on volume
+            if (volume >= 100) {
+                unitPrice = priceData.wholesale100;
+                priceType = 'Оптовая цена от 100 м³';
+            } else if (volume >= 10) {
+                unitPrice = priceData.wholesale10;
+                priceType = 'Оптовая цена от 10 м³';
+            } else {
+                unitPrice = priceData.retail;
+                priceType = 'Розничная цена';
+            }
+
+            // Calculate material cost
+            let materialCost = unitPrice * volume;
+
+            // Calculate delivery cost
+            let deliveryCost = 0;
+            let deliveryInfo = '';
+
+            if (deliveryType !== 'pickup') {
+                if (distance <= 10) {
+                    deliveryCost = 0;
+                    deliveryInfo = 'Бесплатная доставка (до 10 км)';
+                } else if (distance <= 50) {
+                    deliveryCost = (distance - 10) * 15 * Math.ceil(volume / 25); // 15 руб/км за машину
+                    deliveryInfo = `Доставка: ${(distance - 10) * 15} ₽/км × ${Math.ceil(volume / 25)} машин`;
+                } else {
+                    deliveryCost = distance * 20 * Math.ceil(volume / 25);
+                    deliveryInfo = `Дальняя доставка: ${distance * 20} ₽/км × ${Math.ceil(volume / 25)} машин`;
+                }
+
+                // Apply delivery type multiplier
+                if (deliveryType === 'urgent') {
+                    deliveryCost *= 1.2;
+                    deliveryInfo += ' (срочная +20%)';
+                } else if (deliveryType === 'night') {
+                    deliveryCost *= 1.3;
+                    deliveryInfo += ' (ночная +30%)';
+                }
+            } else {
+                deliveryInfo = 'Самовывоз с карьера';
+            }
+
+            const totalCost = materialCost + deliveryCost;
+
+            // Update display
+            document.getElementById('total-price').textContent = `${totalCost.toLocaleString()} ₽`;
+            
+            let breakdown = `${volume} м³ × ${unitPrice} ₽ = ${materialCost.toLocaleString()} ₽<br>`;
+            breakdown += `${deliveryInfo}`;
+            if (deliveryCost > 0) {
+                breakdown += `: ${deliveryCost.toLocaleString()} ₽`;
+            }
+            breakdown += `<br><strong>Итого: ${totalCost.toLocaleString()} ₽</strong>`;
+            
+            document.getElementById('price-breakdown').innerHTML = breakdown;
+
+            // Show savings info for wholesale
+            const savingsEl = document.getElementById('savings-info');
+            if (volume >= 10) {
+                const retailTotal = prices[sandType].retail * volume + deliveryCost;
+                const savings = retailTotal - totalCost;
+                savingsEl.innerHTML = `💰 Ваша экономия: ${savings.toLocaleString()} ₽ (${priceType})`;
+                savingsEl.style.display = 'block';
+            } else {
+                savingsEl.style.display = 'none';
+            }
+
+            // Show order button
+            document.getElementById('order-calculated').style.display = 'block';
+        }
+
+        // Send calculation to order
+        function sendCalculation() {
+            const sandType = document.getElementById('calc-sand-type').value;
+            const volume = document.getElementById('calc-volume').value;
+            const distance = document.getElementById('calc-distance').value;
+            const deliveryType = document.getElementById('calc-delivery-type').value;
+            const totalPrice = document.getElementById('total-price').textContent;
+
+            const message = `Заказ по калькулятору:%0A%0A` +
+                `Тип песка: ${sandType}%0A` +
+                `Объем: ${volume} м³%0A` +
+                `Расстояние: ${distance} км%0A` +
+                `Доставка: ${deliveryType}%0A` +
+                `Общая стоимость: ${totalPrice}%0A%0A` +
+                `Прошу связаться для подтверждения заказа.`;
+
+            window.open(`https://wa.me/79001234567?text=${message}`, '_blank');
+        }
+
+        // Product ordering
+        function orderProduct(productType) {
+            const message = `Заказ продукции:%0A%0A` +
+                `Тип песка: ${productType}%0A%0A` +
+                `Прошу связаться для уточнения объема и условий поставки.`;
+
+            window.open(`https://wa.me/79001234567?text=${message}`, '_blank');
+        }
+
+        // Scroll animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -653,111 +1597,23 @@
             });
         }, observerOptions);
 
-        // Применяем анимацию ко всем секциям
+        // Apply scroll animations
         document.querySelectorAll('section').forEach(section => {
             section.style.opacity = '0';
-            section.style.transform = 'translateY(30px)';
-            section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            section.style.transform = 'translateY(50px)';
+            section.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
             observer.observe(section);
         });
 
-        // Обработка формы
-        function submitForm(event) {
-            event.preventDefault();
-            
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
-            
-            // Простая валидация
-            if (!data.name || !data.phone) {
-                alert('Пожалуйста, заполните обязательные поля (Имя и Телефон)');
-                return;
-            }
-            
-            // Имитация отправки формы
-            const button = event.target.querySelector('button[type="submit"]');
-            const originalText = button.textContent;
-            
-            button.textContent = 'Отправляется...';
-            button.disabled = true;
-            
-            setTimeout(() => {
-                alert(`Спасибо, ${data.name}! Ваша заявка принята. Мы свяжемся с вами в течение часа.`);
-                event.target.reset();
-                button.textContent = originalText;
-                button.disabled = false;
-            }, 1500);
-        }
-
-        // Подсчет примерной стоимости в реальном времени
-        document.getElementById('sand-type').addEventListener('change', calculatePrice);
-        document.getElementById('volume').addEventListener('input', calculatePrice);
-
-        function calculatePrice() {
-            const sandType = document.getElementById('sand-type').value;
-            const volume = parseInt(document.getElementById('volume').value) || 0;
-            
-            const prices = {
-                'construction': { retail: 850, wholesale10: 750, wholesale100: 650 },
-                'concrete': { retail: 900, wholesale10: 800, wholesale100: 700 },
-                'road': { retail: 800, wholesale10: 700, wholesale100: 600 },
-                'washed': { retail: 1200, wholesale10: 1100, wholesale100: 1000 }
-            };
-            
-            if (sandType && volume > 0) {
-                const priceData = prices[sandType];
-                let price;
-                
-                if (volume >= 100) {
-                    price = priceData.wholesale100;
-                } else if (volume >= 10) {
-                    price = priceData.wholesale10;
-                } else {
-                    price = priceData.retail;
-                }
-                
-                const total = price * volume;
-                
-                // Добавляем информацию о стоимости под формой
-                let priceInfo = document.getElementById('price-info');
-                if (!priceInfo) {
-                    priceInfo = document.createElement('div');
-                    priceInfo.id = 'price-info';
-                    priceInfo.style.marginTop = '1rem';
-                    priceInfo.style.padding = '1rem';
-                    priceInfo.style.background = '#e8f4fd';
-                    priceInfo.style.borderRadius = '8px';
-                    priceInfo.style.textAlign = 'center';
-                    document.querySelector('.contact-form').appendChild(priceInfo);
-                }
-                
-                priceInfo.innerHTML = `
-                    <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">Примерная стоимость:</h4>
-                    <p style="font-size: 1.2rem; color: #f39c12; font-weight: bold;">
-                        ${total.toLocaleString()} ₽ (${price} ₽/м³)
-                    </p>
-                    <p style="font-size: 0.9rem; color: #666;">
-                        ${volume >= 100 ? 'Оптовая цена от 100 м³' : 
-                          volume >= 10 ? 'Оптовая цена от 10 м³' : 'Розничная цена'}
-                    </p>
-                `;
-            } else {
-                const priceInfo = document.getElementById('price-info');
-                if (priceInfo) {
-                    priceInfo.remove();
-                }
-            }
-        }
-
-        // Активное выделение текущего раздела в навигации
+        // Active navigation based on scroll
         window.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
+            const navLinks = document.querySelectorAll('.nav-link');
             
             let currentSection = '';
             
             sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
+                const sectionTop = section.offsetTop - 120;
                 const sectionHeight = section.clientHeight;
                 
                 if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
@@ -766,12 +1622,82 @@
             });
             
             navLinks.forEach(link => {
-                link.style.background = '';
+                link.classList.remove('active');
                 if (link.getAttribute('href') === '#' + currentSection) {
-                    link.style.background = '#f39c12';
+                    link.classList.add('active');
                 }
             });
         });
+
+        // Parallax effect for hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Enhanced cursor effect
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.createElement('div');
+            cursor.className = 'cursor-trail';
+            cursor.style.cssText = `
+                position: fixed;
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                width: 4px;
+                height: 4px;
+                background: var(--secondary-color);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9998;
+                animation: cursorFade 0.5s ease-out forwards;
+            `;
+            
+            document.body.appendChild(cursor);
+            
+            setTimeout(() => {
+                cursor.remove();
+            }, 500);
+        });
+
+        // Add cursor fade animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes cursorFade {
+                to {
+                    opacity: 0;
+                    transform: scale(3);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const nav = document.querySelector('.nav-menu');
+            nav.classList.toggle('mobile-open');
+        }
+
+        // Add mobile styles
+        const mobileStyle = document.createElement('style');
+        mobileStyle.textContent = `
+            @media (max-width: 768px) {
+                .nav-menu.mobile-open {
+                    display: flex;
+                    flex-direction: column;
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    background: var(--primary-color);
+                    padding: 1rem 0;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                }
+            }
+        `;
+        document.head.appendChild(mobileStyle);
     </script>
 </body>
 </html>
